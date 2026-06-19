@@ -22,6 +22,15 @@ from geoalchemy2.shape import to_shape
 
 import crud, models, schemas, security, otp_utils
 from database import SessionLocal, engine
+from sqlalchemy import text
+
+# Automatically enable PostGIS extension on the Postgres DB if not already present
+try:
+    with engine.begin() as conn:
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS postgis;"))
+    print("PostGIS extension initialized successfully.")
+except Exception as e:
+    print(f"Warning: Could not automatically enable PostGIS: {e}")
 
 models.Base.metadata.create_all(bind=engine)
 
