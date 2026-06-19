@@ -1,0 +1,129 @@
+/* in src/pages/LoginPage.css */
+
+.login-container {
+    position: relative; /* Needed for the overlay */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+
+    /* The new background image */
+    background-image: url('../assets/coastline.jpg'); 
+    background-size: cover;
+    background-position: center;
+}
+
+/* Creates the dark overlay for readability */
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1;
+}
+
+/* Ensures title and form are on top of the overlay */
+.app-title, .login-form, .back-link {
+    position: relative;
+    z-index: 2;
+}
+
+/* Change title and link color to white for better contrast */
+.app-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.back-link a {
+    color: #ffffff;
+    text-decoration: none;
+}
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+/* The rest of the styles remain the same */
+.login-form {
+  background: white;
+  padding: 2rem 3rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-form h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box; 
+}
+
+.login-form button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.login-form button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: #d93025;
+  margin-top: 1rem;
+  font-size: 14px;
+}
+
+/* in src/pages/LoginPage.css */
+
+/* Wrapper to position the icon relative to the input */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Style for the eye icon itself */
+.eye-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+}

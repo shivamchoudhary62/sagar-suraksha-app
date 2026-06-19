@@ -74,3 +74,39 @@ def delete_report(db: Session, report_id: int):
 
 def get_reports_by_owner(db: Session, owner_id: int):
     return db.query(models.Report).filter(models.Report.owner_id == owner_id).order_by(models.Report.id.desc()).all()
+
+# --- Social Media CRUD ---
+def get_social_media_posts(db: Session, platform: str | None = None, is_verified: bool | None = None, skip: int = 0, limit: int = 100):
+    query = db.query(models.SocialMediaPost)
+    if platform:
+        query = query.filter(models.SocialMediaPost.platform == platform)
+    if is_verified is not None:
+        query = query.filter(models.SocialMediaPost.is_verified == is_verified)
+    return query.order_by(models.SocialMediaPost.timestamp.desc()).offset(skip).limit(limit).all()
+
+def create_social_media_post(db: Session, post: schemas.SocialMediaPostCreate):
+    db_post = models.SocialMediaPost(
+        platform=post.platform,
+        username=post.username,
+        post_text=post.post_text,
+        timestamp=post.timestamp,
+        latitude=post.latitude,
+        longitude=post.longitude,
+        hazard_type=post.hazard_type,
+        sentiment=post.sentiment,
+        is_verified=post.is_verified,
+        associated_report_id=post.associated_report_id
+    )
+    db.add(db_post)
+    db.commit()
+    db.refresh(db_post)
+    return db_post
+
+def verify_social_media_post(db: Session, post_id: int, report_id: int):
+    db_post = db.query(models.SocialMediaPost).filter(models.SocialMediaPost.id == post_id).first()
+    if db_post:
+        db_post.is_verified = True
+        db_post.associated_report_id = report_id
+        db.commit()
+        db.refresh(db_post)
+    return db_post

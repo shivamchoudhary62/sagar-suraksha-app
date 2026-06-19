@@ -1,0 +1,504 @@
+/* in src/pages/AdminDashboard.css */
+.dashboard-layout {
+    display: flex;
+    background-color: #0f172a; /* Slate 900 for modern dark theme */
+    min-height: calc(100vh - 60px);
+    color: #f1f5f9;
+}
+
+.main-content {
+    flex-grow: 1;
+    height: calc(100vh - 60px);
+    position: relative;
+    overflow-y: auto;
+    background-color: #0f172a;
+}
+
+/* Map specific tweaks */
+.popup-card {
+    font-family: 'Inter', sans-serif;
+    color: #1e293b;
+    min-width: 220px;
+}
+.popup-card h4 {
+    margin: 0 0 5px 0;
+    color: #0f172a;
+    font-size: 1rem;
+}
+.popup-status {
+    font-size: 0.85rem;
+    margin: 0 0 8px 0;
+    color: #64748b;
+}
+.status-text-verified {
+    color: #22c55e;
+    font-weight: bold;
+}
+.status-text-unverified {
+    color: #3b82f6;
+    font-weight: bold;
+}
+.status-text-false {
+    color: #ef4444;
+    font-weight: bold;
+}
+.popup-desc {
+    font-size: 0.9rem;
+    color: #334155;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+.popup-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+.btn-verify, .btn-false, .btn-verify-social {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+.btn-verify {
+    background-color: #22c55e;
+    color: white;
+}
+.btn-verify:hover {
+    background-color: #16a34a;
+}
+.btn-false {
+    background-color: #ef4444;
+    color: white;
+}
+.btn-false:hover {
+    background-color: #dc2626;
+}
+
+/* Social media popup card */
+.social-popup-card {
+    min-width: 250px;
+}
+.social-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.social-platform-badge {
+    background-color: #8b5cf6;
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.social-username {
+    font-size: 0.85rem;
+    color: #475569;
+    font-weight: 600;
+}
+.social-meta {
+    font-size: 0.8rem;
+    color: #475569;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 5px;
+}
+.sentiment-critical {
+    color: #ef4444;
+}
+.sentiment-warning {
+    color: #f59e0b;
+}
+.sentiment-info {
+    color: #3b82f6;
+}
+.btn-verify-social {
+    background-color: #8b5cf6;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+.btn-verify-social:hover {
+    background-color: #7c3aed;
+}
+
+/* Social Analytics View Layout */
+.social-analytics-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.analytics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+.analytics-header h2 {
+    font-size: 1.8rem;
+    margin: 0 0 5px 0;
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.analytics-header p {
+    margin: 0;
+    color: #94a3b8;
+}
+.sync-button {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    transition: all 0.2s ease-in-out;
+}
+.sync-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+.sync-button:disabled {
+    background: #334155;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+/* Cards Grid */
+.analytics-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.stat-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+}
+.stat-card:hover {
+    border-color: #475569;
+    transform: translateY(-2px);
+}
+.stat-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+}
+.stat-val {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #f8fafc;
+    margin-bottom: 5px;
+}
+.warning-val {
+    color: #f59e0b;
+}
+.critical-val {
+    color: #ef4444;
+}
+.stat-sub {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+/* Charts Grid */
+.analytics-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+.chart-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 1.5rem;
+    border-radius: 12px;
+}
+.chart-card h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.1rem;
+    color: #f1f5f9;
+    border-left: 4px solid #3b82f6;
+    padding-left: 10px;
+}
+
+/* Custom CSS Bar Chart */
+.bar-chart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.chart-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.chart-bar-label {
+    width: 140px;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    text-transform: capitalize;
+}
+.chart-bar-bg {
+    flex-grow: 1;
+    background-color: #0f172a;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.chart-bar-fill {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.8s ease-in-out;
+}
+.chart-bar-value {
+    width: 25px;
+    text-align: right;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #f8fafc;
+}
+
+/* Sentiment Rings / Mini bars styling */
+.sentiment-doughnut-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+}
+.sentiment-rings {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.sentiment-ring-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot.sentiment-critical {
+    background-color: #ef4444;
+}
+.dot.sentiment-warning {
+    background-color: #f59e0b;
+}
+.dot.sentiment-info {
+    background-color: #3b82f6;
+}
+.sentiment-ring-row .label {
+    width: 120px;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+}
+.bar-mini-container {
+    flex-grow: 1;
+    background-color: #0f172a;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.bar-mini-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+.bg-critical {
+    background-color: #ef4444;
+}
+.bg-warning {
+    background-color: #f59e0b;
+}
+.bg-info {
+    background-color: #3b82f6;
+}
+
+/* Live Feed Section */
+.social-feed-section {
+    margin-top: 2rem;
+}
+.social-feed-section h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: #f8fafc;
+}
+.feed-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.feed-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: all 0.2s;
+}
+.feed-card:hover {
+    border-color: #475569;
+}
+.verified-post {
+    border-left: 5px solid #22c55e;
+}
+.feed-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+.feed-user-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.platform-tag {
+    background: #3b82f6;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+.user-handle {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+.post-time {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+.feed-badge-group {
+    display: flex;
+    gap: 8px;
+}
+.badge-sentiment {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+.badge-sentiment.badge-critical {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.badge-sentiment.badge-warning {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.badge-sentiment.badge-info {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.badge-hazard {
+    background-color: #334155;
+    color: #cbd5e1;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: 1px solid #475569;
+}
+.feed-text {
+    margin: 0 0 1rem 0;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    font-style: italic;
+}
+.feed-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #334155;
+    padding-top: 0.75rem;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.feed-coordinates {
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+.verify-action-btn {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.verify-action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2);
+}
+.status-verified-pill {
+    color: #10b981;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+.action-disabled-text {
+    color: #475569;
+    font-size: 0.8rem;
+}
+.no-posts {
+    text-align: center;
+    padding: 3rem;
+    background: #1e293b;
+    border-radius: 12px;
+    border: 1px dashed #475569;
+    color: #64748b;
+}
+
+@media (max-width: 900px) {
+    .analytics-charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-layout {
+        flex-direction: column;
+    }
+    .main-content {
+        height: auto;
+    }
+    .analytics-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .sync-button {
+        width: 100%;
+    }
+}

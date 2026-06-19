@@ -1,0 +1,14 @@
+# Python configurations
+backend/venv/
+backend/.env
+backend/__pycache__/
+*.pyc
+
+# Node / React configurations
+frontend-web/node_modules/
+frontend-web/build/
+.npmrc
+
+# Local system files
+.DS_Store
+Thumbs.db

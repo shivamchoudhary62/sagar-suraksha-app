@@ -58,3 +58,29 @@ class VerifyOTPRequest(BaseModel):
     email: str | None = None
     phone_number: str | None = None
     otp: str
+
+# --- Resend OTP Schema ---
+class ResendOTPRequest(BaseModel):
+    email: str
+
+# --- Social Media Schemas ---
+class SocialMediaPostBase(BaseModel):
+    platform: str
+    username: str
+    post_text: str
+    timestamp: datetime
+    latitude: float | None = None
+    longitude: float | None = None
+    hazard_type: str | None = None
+    sentiment: str | None = None
+    is_verified: bool = False
+    associated_report_id: int | None = None
+
+class SocialMediaPostCreate(SocialMediaPostBase):
+    pass
+
+class SocialMediaPost(SocialMediaPostBase):
+    id: int
+
+    class Config:
+        from_attributes = True

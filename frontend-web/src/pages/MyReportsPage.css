@@ -1,0 +1,79 @@
+/* in src/pages/MyReportsPage.css */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.page-header h2 {
+    margin: 0;
+}
+
+.new-report-button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.new-report-button:hover {
+    background-color: #218838;
+}
+
+.my-reports-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.report-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.report-card h3 {
+    margin-top: 0;
+    text-transform: capitalize;
+}
+
+.report-card p {
+    flex-grow: 1;
+    color: #555;
+}
+
+.report-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.status-badge {
+    margin-top: 1rem;
+    padding: 5px 10px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+    align-self: flex-start;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-unverified { background-color: #007bff; }
+.status-verified { background-color: #28a745; }
+.status-false { background-color: #dc3545; }

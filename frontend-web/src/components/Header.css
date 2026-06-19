@@ -1,0 +1,39 @@
+/* in src/components/Header.css */
+.app-header {
+    background-color: #004a7c;
+    padding: 0 2rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+}
+.app-header .logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.user-menu a {
+    color: white;
+    text-decoration: none;
+}
+.user-menu a:hover {
+    text-decoration: underline;
+}
+.user-menu button {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.user-menu button:hover {
+    background: #c0392b;
+}

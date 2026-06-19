@@ -10,7 +10,11 @@ import os
 import shutil
 import json
 import uuid
+from dotenv import load_dotenv
 from websocket_manager import manager
+
+# Load env variables on startup
+load_dotenv()
 
 # Imports for the custom encoder fix
 from geoalchemy2.elements import WKBElement
@@ -104,6 +108,19 @@ def verify_new_user(request: schemas.VerifyOTPRequest, db: Session = Depends(get
     user.otp_expiry = None
     db.commit()
     return {"message": "Account verified successfully. Please log in."}
+
+@app.post("/resend-otp")
+def resend_otp(request: schemas.ResendOTPRequest, db: Session = Depends(get_db)):
+    user = crud.get_user_by_email(db, email=request.email)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.is_email_verified:
+        raise HTTPException(status_code=400, detail="Account already verified")
+    
+    otp = otp_utils.generate_otp()
+    crud.set_otp_for_user(db, user=user, otp=otp)
+    otp_utils.send_otp_email(user.email, otp)
+    return {"message": "A new OTP has been sent to your email."}
 
 @app.post("/user/token", response_model=schemas.Token)
 def user_login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
@@ -229,3 +246,118 @@ def delete_a_report(
     if not report_to_delete:
         raise HTTPException(status_code=404, detail="Report not found")
     return {"ok": True}
+
+# --- Social Media Analytics Endpoints ---
+@app.get("/api/social-media/", response_model=list[schemas.SocialMediaPost])
+def read_social_media_posts(
+    platform: str | None = None,
+    is_verified: bool | None = None,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_user)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized to view social media analytics")
+    return crud.get_social_media_posts(db, platform=platform, is_verified=is_verified, skip=skip, limit=limit)
+
+@app.post("/api/social-media/sync", response_model=list[schemas.SocialMediaPost])
+def sync_social_media(
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_user)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized to trigger sync")
+    
+    import random
+    from datetime import datetime, timezone, timedelta
+    
+    cities = [
+        {"name": "Mumbai", "lat": 18.97, "lng": 72.82},
+        {"name": "Chennai", "lat": 13.08, "lng": 80.27},
+        {"name": "Kochi", "lat": 9.93, "lng": 76.26},
+        {"name": "Visakhapatnam", "lat": 17.68, "lng": 83.21},
+        {"name": "Puri", "lat": 19.81, "lng": 85.83},
+        {"name": "Diu", "lat": 20.71, "lng": 70.98},
+        {"name": "Mangalore", "lat": 12.91, "lng": 74.85},
+    ]
+    
+    users = ["@coast_watcher", "@marine_life_india", "@storm_tracker_in", "@fisher_sam", "@mumbai_tidings", "@vizag_beach_love", "@puri_priest_9"]
+    
+    templates = [
+        {"text": "Massive waves crashing near the beach today. The promenade is flooded. Please stay safe! #highwaves #coastalflood", "type": "HIGH_WAVES", "sentiment": "CRITICAL"},
+        {"text": "Water levels are rising rapidly around the coastal village. Local boats are being tied up. #unusualtides #coastalflooding", "type": "COASTAL_FLOODING", "sentiment": "CRITICAL"},
+        {"text": "Unusually high tide today at the harbor. Water is almost covering the jetty! #unusualtides", "type": "UNUSUAL_TIDES", "sentiment": "WARNING"},
+        {"text": "Heavy swell waves hitting the shore since morning. It looks beautiful but dangerous. #swellsurges #oceanalert", "type": "SWELL_SURGES", "sentiment": "WARNING"},
+        {"text": "Severe erosion noticed near the coast. A couple of structures on the beach have been damaged. #coastaldamage", "type": "COASTAL_DAMAGE", "sentiment": "CRITICAL"},
+        {"text": "Calm waters today. Perfect day for fishing! #oceanview #peaceful", "type": "HIGH_WAVES", "sentiment": "INFO"},
+        {"text": "High wind speeds and rising tide water entering the low-lying fields. #coastalflooding", "type": "COASTAL_FLOODING", "sentiment": "CRITICAL"}
+    ]
+    
+    synced_posts = []
+    num_posts = random.randint(4, 7)
+    for _ in range(num_posts):
+        city = random.choice(cities)
+        user = random.choice(users)
+        template = random.choice(templates)
+        
+        lat_jitter = random.uniform(-0.05, 0.05)
+        lng_jitter = random.uniform(-0.05, 0.05)
+        
+        h_type = template["type"]
+        if template["sentiment"] == "INFO":
+            h_type = None
+            
+        post_data = schemas.SocialMediaPostCreate(
+            platform=random.choice(["X/Twitter", "Instagram", "Facebook"]),
+            username=user,
+            post_text=template["text"].replace("today", f"at {city['name']}"),
+            timestamp=datetime.now(timezone.utc) - timedelta(minutes=random.randint(5, 240)),
+            latitude=city["lat"] + lat_jitter,
+            longitude=city["lng"] + lng_jitter,
+            hazard_type=h_type,
+            sentiment=template["sentiment"],
+            is_verified=False,
+            associated_report_id=None
+        )
+        
+        db_post = crud.create_social_media_post(db, post=post_data)
+        synced_posts.append(db_post)
+        
+    return synced_posts
+
+@app.post("/api/social-media/{post_id}/verify", response_model=schemas.Report)
+async def verify_social_post_endpoint(
+    post_id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_user)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized to verify posts")
+        
+    post = db.query(models.SocialMediaPost).filter(models.SocialMediaPost.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Social media post not found")
+    if post.is_verified:
+        raise HTTPException(status_code=400, detail="Social media post already verified and linked")
+        
+    lat = post.latitude if post.latitude is not None else 20.0
+    lng = post.longitude if post.longitude is not None else 75.0
+    h_type = post.hazard_type if post.hazard_type else "UNUSUAL_TIDES"
+    description = f"Report created from social media verification ({post.platform} - {post.username}): {post.post_text}"
+    
+    report_data = schemas.ReportCreate(
+        latitude=lat,
+        longitude=lng,
+        hazard_type=h_type,
+        description=description,
+        media_url=None
+    )
+    
+    new_report = crud.create_report(db=db, report=report_data, owner_id=None)
+    new_report = crud.update_report_status(db=db, report_id=new_report.id, status="VERIFIED")
+    
+    crud.verify_social_media_post(db=db, post_id=post_id, report_id=new_report.id)
+    
+    await manager.broadcast(jsonable_encoder(new_report, custom_encoder=custom_encoder))
+    return new_report

@@ -36,4 +36,19 @@ class Report(Base):
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     owner = relationship("User", back_populates="reports")
 
-# (Your SocialMediaPost model if it exists)
+class SocialMediaPost(Base):
+    __tablename__ = "social_media_posts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    platform = Column(String(50), nullable=False, default='X/Twitter')
+    username = Column(String(100), nullable=False)
+    post_text = Column(Text, nullable=False)
+    timestamp = Column(TIMESTAMP(timezone=True), nullable=False)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    hazard_type = Column(String(50), nullable=True)
+    sentiment = Column(String(20), nullable=True)  # e.g., 'CRITICAL', 'WARNING', 'INFO'
+    is_verified = Column(Boolean, default=False)
+    associated_report_id = Column(Integer, ForeignKey("reports.id"), nullable=True)
+
+    associated_report = relationship("Report")
